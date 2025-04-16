@@ -1,0 +1,11 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: fiery-catwalk-440706-k8
+      dataset: youtube_data
+      threads: 2
+      timeout_seconds: 300
+      keyfile: /opt/airflow/creds.json

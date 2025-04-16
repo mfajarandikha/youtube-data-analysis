@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: youtube_data
+    database: fiery-catwalk-440706-k8
+    schema: youtube_data
+    tables:
+      - name: live_stream_stats
+
+models:
+  - name: views_by_day
+    description: |
+      Aggregates total video views by day of the week to identify which days generate the most engagement.
+    columns:
+      - name: day_of_week
+        description: Day of week as a number (1=Sunday, 7=Saturday).
+      - name: day_name
+        description: Name of the day (e.g., Monday, Tuesday).
+      - name: total_views
+        description: Total number of views accumulated on that day across all videos.
+
+  - name: rolling_trend
+    description: |
+      Displays daily total views and a rolling 7-day average to track performance trends over time.
+    columns:
+      - name: publish_date
+        description: The date videos were published (grouped per day).
+      - name: total_views
+        description: Total views for that specific day.
+      - name: rolling_7_day_avg
+        description: 7-day moving average of daily views to observe performance trends.
