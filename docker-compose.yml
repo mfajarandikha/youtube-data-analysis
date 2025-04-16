@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+
+  airflow-webserver:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      # AIRFLOW__CORE__FERNET_KEY: 'pBwFXUu9J-h-tu_tfJDwRn0eZDimUKODPOXXGFoeOoQ='
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'a0KfjQKMIVmyTfPqqJYq-Y7qgiN4UIzA0T8Mb_9KSEg='
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      GOOGLE_APPLICATION_CREDENTIALS: 'creds.json'
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./terraform:/opt/airflow/terraform
+      - ./data:/opt/airflow/data # Mount local ./data folder to container
+      - ./creds.json:/opt/airflow/creds.json
+      - ./dbt:/opt/airflow/dbt
+
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+        airflow db init &&
+        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
+        airflow webserver
+      "
+
+  airflow-scheduler:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      # AIRFLOW__CORE__FERNET_KEY: 'pBwFXUu9J-h-tu_tfJDwRn0eZDimUKODPOXXGFoeOoQ='
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'a0KfjQKMIVmyTfPqqJYq-Y7qgiN4UIzA0T8Mb_9KSEg='
+      GOOGLE_APPLICATION_CREDENTIALS: 'creds.json'
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./terraform:/opt/airflow/terraform
+      - ./data:/opt/airflow/data # Same volume for scheduler
+      - ./creds.json:/opt/airflow/creds.json
+      - ./dbt:/opt/airflow/dbt # ✅ ADD THIS LINE
+
+    command: >
+      bash -c "airflow scheduler"
+
+  terraform:
+    image: hashicorp/terraform:latest
+    working_dir: /workspace
+    volumes:
+      - ./terraform:/workspace
+    entrypoint: sh
+    command: -c "terraform destroy -auto-approve && terraform init && terraform apply -auto-approve"
+
+volumes:
+  postgres_db:
