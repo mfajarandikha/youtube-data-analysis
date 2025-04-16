@@ -17,14 +17,12 @@ services:
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      # AIRFLOW__CORE__FERNET_KEY: 'pBwFXUu9J-h-tu_tfJDwRn0eZDimUKODPOXXGFoeOoQ='
-      AIRFLOW__WEBSERVER__SECRET_KEY: 'a0KfjQKMIVmyTfPqqJYq-Y7qgiN4UIzA0T8Mb_9KSEg='
+      AIRFLOW__WEBSERVER__SECRET_KEY: ''
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       GOOGLE_APPLICATION_CREDENTIALS: 'creds.json'
     volumes:
       - ./dags:/opt/airflow/dags
       - ./terraform:/opt/airflow/terraform
-      - ./data:/opt/airflow/data # Mount local ./data folder to container
       - ./creds.json:/opt/airflow/creds.json
       - ./dbt:/opt/airflow/dbt
 
@@ -43,17 +41,15 @@ services:
       - postgres
     environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-      # AIRFLOW__CORE__FERNET_KEY: 'pBwFXUu9J-h-tu_tfJDwRn0eZDimUKODPOXXGFoeOoQ='
-      AIRFLOW__WEBSERVER__SECRET_KEY: 'a0KfjQKMIVmyTfPqqJYq-Y7qgiN4UIzA0T8Mb_9KSEg='
+      AIRFLOW__WEBSERVER__SECRET_KEY: ''
       GOOGLE_APPLICATION_CREDENTIALS: 'creds.json'
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
 
     volumes:
       - ./dags:/opt/airflow/dags
       - ./terraform:/opt/airflow/terraform
-      - ./data:/opt/airflow/data # Same volume for scheduler
       - ./creds.json:/opt/airflow/creds.json
-      - ./dbt:/opt/airflow/dbt # ✅ ADD THIS LINE
+      - ./dbt:/opt/airflow/dbt
 
     command: >
       bash -c "airflow scheduler"
