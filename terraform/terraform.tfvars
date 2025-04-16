@@ -1,0 +1,7 @@
+bucket_name_source = "final-project-bucket-resource"
+storage_class       = "REGIONAL"
+project_id          = "fiery-catwalk-440706-k8"
+region              = "us-central1"
+dataset_id          = "youtube_data"
+table_id            = "live_stream_stats"
+zone                = "us-central1-a"
