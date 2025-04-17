@@ -96,3 +96,17 @@ Once your data is in BigQuery and transformed via dbt, view the insights in Look
 - **Python**: `requests`, `pandas`, `google-api-python-client`, `google-cloud-storage`, etc.
 
 ---
+
+## 📊 Dashboard
+
+You can explore the interactive data report here:  
+👉 [Marapthon Season 2 Content Insights & Viewer Trends](https://lookerstudio.google.com/reporting/5b7aa03c-05a0-4880-8946-20ca911f9f0b)
+
+This dashboard visualizes:
+
+- Top-performing live based on view trends
+- Viewer behavior across days
+- Shifts in content engagement over time
+- Daily view patterns
+
+---
