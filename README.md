@@ -96,10 +96,3 @@ Once your data is in BigQuery and transformed via dbt, view the insights in Look
 - **Python**: `requests`, `pandas`, `google-api-python-client`, `google-cloud-storage`, etc.
 
 ---
-
-## 📈 Dashboard Title
-
-> **Marapthon Season 2: Content Insights & Viewer Trends**  
-Gain insight into viewer behavior and video performance to optimize future content strategies.
-
----
